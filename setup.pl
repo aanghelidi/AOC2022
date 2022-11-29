@@ -11,7 +11,7 @@ if ( $number_args == 0 ) {
     say "AOC Perl setup script that perform the following actions:";
     say "- create a new directory for the choosen puzzle";
     say "- download the corresponding input";
-    say "- open puzzle in vim\n";
+    say "- open puzzle in nvim\n";
     say "Usage: ./setup.pl 1 2022 main.pl\n";
 }
 
