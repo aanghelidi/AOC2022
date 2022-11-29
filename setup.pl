@@ -42,4 +42,4 @@ else {
 chdir( $ARGV[1] . "/day" . $ARGV[0] );
 
 # Open file in vim
-exec "vim", $ARGV[2];
+exec "nvim", $ARGV[2];
