@@ -28,5 +28,5 @@ while (<$f>) {
     $ans  += score( $c, $s );
     $ans2 += score2( $c, $s );
 }
-say $ans;
-say $ans2;
+say "Part 1: $ans";
+say "Part 2: $ans2";
