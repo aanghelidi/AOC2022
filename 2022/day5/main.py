@@ -27,12 +27,9 @@ def parse_stacks(stacks: str) -> dict[int, deque]:
     return ds
 
 
-ds = parse_stacks(stacks)
-
-
-def move(n_el: int, from_s: Stack, to_s: Stack) -> None:
+def move(n_el: int, from_s: deque, to_s: deque) -> None:
     i = 0
-    Q = deque()
+    Q = []
     while i != n_el:
         # part 1
         # el = from_s.pop()
@@ -46,6 +43,7 @@ def move(n_el: int, from_s: Stack, to_s: Stack) -> None:
         to_s.append(el)
 
 
+ds = parse_stacks(stacks)
 for p in procedures.splitlines():
     m = r.search(p)
     a, b, c = [int(m) for m in m.groups()]
