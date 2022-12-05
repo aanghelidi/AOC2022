@@ -29,7 +29,7 @@ def parse_stacks(stacks: str) -> dict[int, deque]:
 
 def move(n_el: int, from_s: deque, to_s: deque) -> None:
     i = 0
-    Q = []
+    Q = deque() 
     while i != n_el:
         # part 1
         # el = from_s.pop()
