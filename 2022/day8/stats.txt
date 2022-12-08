@@ -1,0 +1,24 @@
+Command './main'
+  runs:        100
+  mean:      0.007 s
+  stddev:    0.003 s
+  median:    0.005 s
+  min:       0.005 s
+  max:       0.020 s
+
+  percentiles:
+     P_05 .. P_95:    0.005 s .. 0.015 s
+     P_25 .. P_75:    0.005 s .. 0.007 s  (IQR = 0.002 s)
+
+Command 'python main.py'
+  runs:        100
+  mean:      0.062 s
+  stddev:    0.022 s
+  median:    0.055 s
+  min:       0.042 s
+  max:       0.155 s
+
+  percentiles:
+     P_05 .. P_95:    0.044 s .. 0.126 s
+     P_25 .. P_75:    0.050 s .. 0.062 s  (IQR = 0.012 s)
+
