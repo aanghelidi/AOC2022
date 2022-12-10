@@ -11,7 +11,6 @@ def draw_pixel(X: int, pixel_position: int) -> None:
 
 with open("input.txt") as f:
     draw_pixel(X, pixel_position)
-    crt_row = []
     for line in f:
         line = line.strip().split()
         match line:
