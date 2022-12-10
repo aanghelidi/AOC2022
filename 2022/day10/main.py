@@ -1,9 +1,6 @@
 X, cycle, pixel_position, d, = 1, 1, 0, {1: 1}
 signal_strength = lambda x: d[x] * x
-crt_rows = {}
-for i in range(6):
-    l = [*"." * 40]
-    crt_rows[i] = l
+crt_rows = {i: [*"." * 40] for i in range(6)}
 
 def draw_pixel(X: int, pixel_position: int) -> None:
     if (pixel_drawn := pixel_position % 40) in (X - 1, X, X + 1):
