@@ -31,7 +31,7 @@ class Knot:
         for nc in DIRECTIONS.values():
             yield self.position + nc
 
-    def place_behind(self, d: str, other: Self) -> None:
+    def follow_head(self, d: str, other: Self) -> None:
         # Check if the head and tail are in the same row or column
         if (
             abs(self.position.real - other.position.real) <= 1
@@ -60,7 +60,7 @@ for part, length in zip((1, 2), (2, 10)):
                     rope[0].move(d)
                     for h, t in pairwise(rope):
                         if h.position not in t.get_n8_and_self():
-                            t.place_behind(d, h)
+                            t.follow_head(d, h)
             case _:
                 raise ValueError("Invalid instruction")
     print(f"Part {part}: {len(rope[-1].visited)}")
