@@ -1,9 +1,6 @@
 from dataclasses import dataclass, field
-from typing import Self
-from rich import print
-
-#code does not follow the rules described in the problem statement for updating the position of the tail. 
-#Do not handle the case where the head is two steps directly up, down, left, or right from the tail.
+from typing import Iterator, Self
+from itertools import pairwise
 
 DIRECTIONS = {
     "L": complex(-1, 0),
@@ -16,18 +13,10 @@ DIRECTIONS = {
     "U": complex(0, 1),
 }
 
-DIAG_DIST = {
-    complex(1, 2): "DUR",
-    complex(-2, 1): "DUL",
-    complex(-2, -1): "DDL",
-    complex(2, -1): "DDR",
-}
-
 
 @dataclass
 class Knot:
     position: complex
-    name: str
     visited: set[complex] = field(init=False)
 
     def __post_init__(self) -> None:
@@ -37,66 +26,41 @@ class Knot:
         self.position += DIRECTIONS[d]
         self.visited.add(self.position)
 
-    def norm(self, other: Self) -> float:
-        return abs(self.position - other.position)
+    def get_n8_and_self(self) -> Iterator[complex]:
+        yield self.position
+        for nc in DIRECTIONS.values():
+            yield self.position + nc
 
+    def place_behind(self, d: str, other: Self) -> None:
+        # Check if the head and tail are in the same row or column
+        if (
+            abs(self.position.real - other.position.real) <= 1
+            and abs(self.position.imag - other.position.imag) <= 1
+        ):
+            self.move(d)
+        else:
+            diff = other.position - self.position
+            closest_direction = min(DIRECTIONS.values(), key=lambda x: abs(x - diff))
+            self.position += closest_direction
+            self.visited.add(self.position)
+
+
+with open("input.txt") as f:
+    lines = f.read().splitlines()
 
 s = complex(0, 0)
-head, tail = Knot(position=s, name="head"), Knot(position=s, name="tail")
-with open("sample.txt") as f:
-    for i, line in enumerate(f):
+for part, length in zip((1, 2), (2, 10)):
+    rope = [Knot(position=s) for _ in range(length)]
+    for line in lines:
         instruction = line.strip().split()
         match instruction:
-            case ["R", step]:
+            case [d, step]:
                 step = int(step)
-                for i in range(step):
-                    if (dist := head.position - tail.position) in DIAG_DIST:
-                        #  tail += (head - tail) / abs(head - tail)
-                        tail.move(DIAG_DIST[dist])
-                    head.move("R")
-                    if head.norm(tail) > 1:
-                        if (
-                            head.position.real == tail.position.real
-                            or head.position.imag == tail.position.imag
-                        ):
-                            # head - tail
-                            tail.move("R")
-            case ["L", step]:
-                step = int(step)
-                for i in range(step):
-                    if (dist := head.position - tail.position) in DIAG_DIST:
-                        tail.move(DIAG_DIST[dist])
-                    head.move("L")
-                    if head.norm(tail) > 1:
-                        if (
-                            head.position.real == tail.position.real
-                            or head.position.imag == tail.position.imag
-                        ):
-                            tail.move("L")
-            case ["U", step]:
-                step = int(step)
-                for i in range(step):
-                    if (dist := head.position - tail.position) in DIAG_DIST:
-                        tail.move(DIAG_DIST[dist])
-                    head.move("U")
-                    if head.norm(tail) > 1:
-                        if (
-                            head.position.real == tail.position.real
-                            or head.position.imag == tail.position.imag
-                        ):
-                            tail.move("U")
-            case ["D", step]:
-                step = int(step)
-                for i in range(step):
-                    if (dist := head.position - tail.position) in DIAG_DIST:
-                        tail.move(DIAG_DIST[dist])
-                    head.move("D")
-                    if head.norm(tail) > 1:
-                        if (
-                            head.position.real == tail.position.real
-                            or head.position.imag == tail.position.imag
-                        ):
-                            tail.move("D")
-
-print(f"Part 1: {len(tail.visited)}")
-
+                for _ in range(step):
+                    rope[0].move(d)
+                    for h, t in pairwise(rope):
+                        if h.position not in t.get_n8_and_self():
+                            t.place_behind(d, h)
+            case _:
+                raise ValueError("Invalid instruction")
+    print(f"Part {part}: {len(rope[-1].visited)}")
