@@ -1,0 +1,12 @@
+hyperfine -n 100 --warmup 10 'python main.py' 'python main2.py'
+Benchmark 1: python main.py
+  Time (mean ± σ):      1.777 s ±  0.012 s    [User: 1.759 s, System: 0.019 s]
+  Range (min … max):    1.756 s …  1.796 s    10 runs
+ 
+Benchmark 2: python main2.py
+  Time (mean ± σ):      79.6 ms ±   0.5 ms    [User: 60.7 ms, System: 20.8 ms]
+  Range (min … max):    78.9 ms …  81.4 ms    36 runs
+ 
+Summary
+  'python main2.py' ran
+   22.32 ± 0.20 times faster than 'python main.py'
