@@ -33,9 +33,8 @@ for part in (1, 2):
             position += 1 + 1j
         else:
             rested.add(position)
-        if part == 1:
-            if position.imag > bottom:
-                break
+        if part == 1 and position.imag > bottom:
+            break
         if position in rested and position == START:
             n_units += 1
             break
