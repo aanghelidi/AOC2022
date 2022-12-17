@@ -1,31 +1,24 @@
 import re
-import math
 
-numbers = lambda x: [int(m) for m in re.findall(r'\d+', x)]
-manhattan = lambda x,y : abs(x.real-y.real) + abs(x.imag-y.imag)
-ans = 0
-grid = {} 
-distances = {}
+numbers = lambda x: [int(m) for m in re.findall(r'-?\d+', x)]
+manhattan = lambda x,y : abs(x[0]-y[0]) + abs(x[1]-y[1])
+distances, seen = {}, set() 
+
 with open("input.txt")  as f:
     for line in f:
         x_s,y_s,x_b,y_b = numbers(line)
-        sensor, beacon = complex(x_s,y_s), complex(x_b,y_b)
-        grid[sensor] = complex(beacon) 
-        distances[sensor] = int(manhattan(sensor,beacon))
+        sensor, beacon = (x_s,y_s), (x_b,y_b)
+        distances[sensor] = (beacon, manhattan(sensor,beacon))
 
-def check_dist(pos: complex,distances: dict) -> bool: 
-    for s_pos, distance in distances.items():
-        md = manhattan(pos,s_pos)
-        if md <= distance:
-            return True
-    return False
-
-sy = set()
-beacons = set(grid.values())
-y = int(2e6)
-for x in range(-int(1e7),int(1e7)):
-    if check_dist(complex(x,y),distances) and complex(x,y) not in beacons:
-        ans += 1
-print(ans)
-
-
+find_y = 2_000_000
+for sensor, (beacon, distance) in distances.items():
+    x,y = sensor[0], sensor[1]
+    cost_to_reach_y = abs(find_y - y)
+    if cost_to_reach_y > distance:
+        continue
+    remaining_moves = distance - cost_to_reach_y
+    no_beacon_x = set(range(x-remaining_moves,x+remaining_moves+1))
+    if beacon[1] == find_y:
+        no_beacon_x.remove(beacon[0])
+    seen |= no_beacon_x
+print(f"Part 1: {len(seen)}")
